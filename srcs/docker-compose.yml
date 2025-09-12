@@ -9,10 +9,17 @@ services:
         - reseau
       env_file:
         - "../.env"
+    wordpress: 
+      container_name: wordpress
+      build:
+        context:  "./requirements/wordpress"
+      volumes:
+        #- 
+        #
 
 volumes:
-    mariadb:
-      driver: local
+  mariadb:
+    driver: local
       driver_opts:
         type: none
         device: "~/data/mariadb"
