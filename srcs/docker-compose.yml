@@ -10,9 +10,7 @@ services:
       - inception
     env_file:
       - "./.env"
-    restart: on-failure
-    expose:
-      - "3306"
+    restart: unless-stopped
 
   wordpress: 
     container_name: wordpress
@@ -20,16 +18,14 @@ services:
       context: ./requirements/wordpress
       dockerfile: Dockerfile
     volumes:
-      - wordpress:/var/www/wordpress
+      - wordpress:/var/www/html/wordpress
     networks:
       - inception
     env_file:
       - "./.env"
     depends_on:
       - mariadb
-    restart: on-failure
-    expose:
-      - "9000"
+    restart: unless-stopped
 
 #  nginx:
 #    container_name: nginx
@@ -54,16 +50,17 @@ volumes:
     driver_opts:
       type: 'none'
       o: 'bind'
-      device: '${HOME}/data/wordpress'
+      device: '$HOME/data/wordpress'
 
   mariadb:
     driver: local
     driver_opts:
       type: 'none'
       o: 'bind'
-      device: '${HOME}/data/mariadb'
+      device: '$HOME/data/mysql'
 
 networks:
   inception:
+    name: inception
     driver: bridge
 

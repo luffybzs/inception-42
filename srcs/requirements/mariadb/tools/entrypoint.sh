@@ -1,20 +1,23 @@
 #!/bin/bash
-#set -eux
+#set -e
 
+# Start MariaDB in the background
 exec mysqld_safe &
 
+# Wait for MariaDB to be ready
 until mysqladmin ping >/dev/null 2>&1; do
-	echo "WAITING FOR MYSQLQADMIN..."
+    echo "Waiting for MariaDB..."
     sleep 1
 done
 
-# log into MariaDB as root and create database and the user
-mysql  -u root -p$MYSQL_ROOT_PASSWORD -h localhost -e "CREATE DATABASE IF NOT EXISTS \`${MYSQL_DATABASE}\`;"
-mysql  -u root -p$MYSQL_ROOT_PASSWORD -h localhost -e "CREATE USER IF NOT EXISTS \`${MYSQL_USER}\`@'localhost' IDENTIFIED BY '${MYSQL_PASSWORD}';"
-mysql  -u root -p$MYSQL_ROOT_PASSWORD -h localhost -e "GRANT ALL PRIVILEGES ON \`${MYSQL_DATABASE}\`.* TO \`${MYSQL_USER}\`@'%' IDENTIFIED BY '${MYSQL_PASSWORD}';"
-mysql  -u root -p$MYSQL_ROOT_PASSWORD -h localhost -e "ALTER USER 'root'@'localhost' IDENTIFIED BY '$MYSQL_ROOT_PASSWORD';"
-mysql  -u root -p$MYSQL_ROOT_PASSWORD -h localhost -e "FLUSH PRIVILEGES;"
+# Create database and user
+mysql -u root -p"$MYSQL_ROOT_PASSWORD" -h localhost -e "CREATE DATABASE IF NOT EXISTS \`${MYSQL_DATABASE}\`;"
+mysql -u root -p"$MYSQL_ROOT_PASSWORD" -h localhost -e "CREATE USER IF NOT EXISTS '$MYSQL_USER'@'%' IDENTIFIED BY '$MYSQL_PASSWORD';"
+mysql -u root -p"$MYSQL_ROOT_PASSWORD" -h localhost -e "GRANT ALL PRIVILEGES ON \`${MYSQL_DATABASE}\`.* TO '$MYSQL_USER'@'%';"
+mysql -u root -p"$MYSQL_ROOT_PASSWORD" -h localhost -e "FLUSH PRIVILEGES;"
 
-mysqladmin -u root -p$MYSQL_ROOT_PASSWORD shutdown
-echo "MariaDB database and user were created successfully! "
+# Shutdown initial instance
+mysqladmin -u root -p"$MYSQL_ROOT_PASSWORD" shutdown
+
+# Start MariaDB in foreground
 exec mysqld_safe
