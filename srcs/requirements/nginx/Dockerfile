@@ -16,9 +16,8 @@ RUN openssl req -x509 -nodes \
     -out /etc/nginx/ssl/server.crt \
     -subj "/C=FR/ST=Paris/L=Paris/O=42/OU=42/CN=ayarab.42.fr"
 
-COPY nginx.conf /etc/nginx/nginx.conf
-COPY index.html /var/www/html/
-
 EXPOSE 443
+
+WORKDIR /var/www/wordpress
 
 CMD ["nginx", "-g", "daemon off;"]

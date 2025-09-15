@@ -1,5 +1,11 @@
 #!/bin/sh
 
+until mysql -h "mariadb" -u "$MARIADB_USER" -p"$MARIADB_USER_PASSWORD" -e "SHOW DATABASES;" > /dev/null 2>&1; do
+	echo "Database is not ready. Retrying in 5 seconds..."
+	sleep 5
+done
+
+
 wp core download --locale=fr_FR
 
 wp config create --dbname=$MYSQL_DATABASE --dbuser=$MYSQL_USER --dbpass=$MYSQL_PASSWORD --dbhost=$MYSQL_HOST

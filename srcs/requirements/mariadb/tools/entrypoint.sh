@@ -1,18 +1,20 @@
-#!/bin/sh
+#!/bin/bash
+#set -eux
 
-if [ ! -d "/mnt/vol/mariadb/wordpress" ];
-then
-	mkdir -p /init
-	mkdir -p /mnt/vol/mariadb
-	chown -R mysql:mysql /mnt/vol/mariadb
-	echo "
-		FLUSH PRIVILEGES;
-		CREATE DATABASE IF NOT EXISTS ${MYSQL_DATABASE};
-		CREATE USER IF NOT EXISTS '${MYSQL_USER}'@'%' IDENTIFIED BY '${MYSQL_PASSWORD}';
-		GRANT ALL ON ${MYSQL_DATABASE}.* TO '${MYSQL_USER}'@'%';
-		FLUSH PRIVILEGES;
-	" > /init/init.sql
-	mariadb-install-db --user=mysql --datadir="/mnt/vol/mariadb" --extra-file="/init/init.sql"
-fi
+exec mysqld_safe &
 
-exec "$@"
+until mysqladmin ping >/dev/null 2>&1; do
+	echo "WAITING FOR MYSQLQADMIN..."
+    sleep 1
+done
+
+# log into MariaDB as root and create database and the user
+mysql  -u root -p$MYSQL_ROOT_PASSWORD -h localhost -e "CREATE DATABASE IF NOT EXISTS \`${MYSQL_DATABASE}\`;"
+mysql  -u root -p$MYSQL_ROOT_PASSWORD -h localhost -e "CREATE USER IF NOT EXISTS \`${MYSQL_USER}\`@'localhost' IDENTIFIED BY '${MYSQL_PASSWORD}';"
+mysql  -u root -p$MYSQL_ROOT_PASSWORD -h localhost -e "GRANT ALL PRIVILEGES ON \`${MYSQL_DATABASE}\`.* TO \`${MYSQL_USER}\`@'%' IDENTIFIED BY '${MYSQL_PASSWORD}';"
+mysql  -u root -p$MYSQL_ROOT_PASSWORD -h localhost -e "ALTER USER 'root'@'localhost' IDENTIFIED BY '$MYSQL_ROOT_PASSWORD';"
+mysql  -u root -p$MYSQL_ROOT_PASSWORD -h localhost -e "FLUSH PRIVILEGES;"
+
+mysqladmin -u root -p$MYSQL_ROOT_PASSWORD shutdown
+echo "MariaDB database and user were created successfully! "
+exec mysqld_safe
