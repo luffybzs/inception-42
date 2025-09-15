@@ -1,8 +1,14 @@
-FROM debian:trixie-slim
+FROM debian:bookworm
 
-RUN apt update \
-	&& apt -y upgrade \
-	&& apt install -y php php7.4-fpm php-mysqli default-mysql-client mariadb-client
+
+RUN apt-get update && apt-get upgrade -y && \
+    apt-get install -y wget php php-cgi php-fpm php-bcmath  php-soap  php-mbstring php-mysqlnd php-gd php-xml php-intl php-zip curl mariadb-client  && \
+    apt-get clean
+
+#RUN apt-get update && \
+#   apt-get upgrade -y && \
+#    apt-get install -y  && \
+#   apt-get clean php7.4 wget php php-curl php-fpm php-bcmath  php-soap  php-mbstring php-mysqlnd php-gd php-xml php-intl php-zip curl mariadb-client  
 
 EXPOSE 9000
 
@@ -15,14 +21,8 @@ WORKDIR /var/www/wordpress
 
 ENTRYPOINT [ "bash", "/wordpress.sh" ]
 
-# RUN apt-get update && \
-#     apt-get upgrade -y && \
-#     apt-get install -y wget php php-curl php-fpm php-bcmath  php-soap  php-mbstring php-mysqlnd php-gd php-xml php-intl php-zip curl mariadb-client  && \
-#     apt-get clean && \
-#     rm -rf /var/lib/apt/lists/*
-# RUN 	curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar && \
-# 	chmod +x wp-cli.phar && \
-# 	mv wp-cli.phar /usr/local/bin/wp
+
+ 
 
 # RUN mkdir -p /var/www/wordpress
 

@@ -1,5 +1,4 @@
 #!/bin/bash
-#set -e
 
 # Start MariaDB in the background
 exec mysqld_safe &
