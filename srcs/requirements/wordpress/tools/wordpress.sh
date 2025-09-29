@@ -1,9 +1,3 @@
-#!/bin/sh
-
-# until mysql -h "mariadb" -u "$MYSQL_USER" -p"$MYSQL_PASSWORD" -e "SHOW DATABASES;" > /dev/null 2>&1; do
-# 	echo "Database is not ready. Retrying in 5 seconds..."
-# 	sleep 5
-# done
 
 curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
 chmod +x wp-cli.phar
@@ -18,9 +12,7 @@ wait_for_db() {
     echo "Database is ready!"
 }
 
-#sleep 10
 wait_for_db
-
 
 wp core download --locale=fr_FR --allow-root
 

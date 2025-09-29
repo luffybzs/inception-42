@@ -18,7 +18,7 @@ services:
       context: ./requirements/wordpress
       dockerfile: Dockerfile
     volumes:
-      - wordpress:/var/www/html/wordpress
+      - wordpress:/var/www/wordpress
     networks:
       - inception
     env_file:
@@ -29,22 +29,22 @@ services:
     expose: 
      - 8080:80
 
-#  nginx:
-#    container_name: nginx
-#    build:
-#      context: ./requirements/nginx
-#      dockerfile: Dockerfile
-#    volumes:
-#      - wordpress:/var/www/wordpress
-#    networks:
-#      - inception
-#    depends_on:
-#      - wordpress
-#    env_file:
-#      - "./.env"
-#    ports:
-#      - "443:443"
-#    restart: on-failure
+  nginx:
+    container_name: nginx
+    build:
+      context: ./requirements/nginx
+      dockerfile: Dockerfile
+    volumes:
+      - wordpress:/var/www/wordpress
+    networks:
+      - inception
+    depends_on:
+      - wordpress
+    env_file:
+      - "./.env"
+    ports:
+      - "443:443"
+    restart: on-failure
 
 volumes:
   wordpress:
