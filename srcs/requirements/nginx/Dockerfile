@@ -8,6 +8,9 @@ RUN apt-get update && \
 
 RUN mkdir -p /etc/nginx/ssl
 
+COPY ./conf/nginx.conf /etc/nginx/nginx.conf
+COPY ./tools/init.sh /init.sh
+RUN chmod +x /init.sh
 
 RUN openssl req -x509 -nodes \
     -days 365 \
@@ -20,4 +23,5 @@ EXPOSE 443
 
 WORKDIR /var/www/wordpress
 
-CMD ["nginx", "-g", "daemon off;"]
+ENTRYPOINT [ "/init.sh" ]
+# CMD ["nginx", "-g", "daemon off;"]

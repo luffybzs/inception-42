@@ -9,14 +9,14 @@ stop:
 	docker compose --project-directory srcs down
 
 delete:
-	sudo rm -rf ~/data/*
+	sudo rm -rf ~/data
 
 supp:
 	docker container rm -f mariadb
 	docker container rm -f wordpress
 	docker container rm -f nginx
 	docker volume rm srcs_mariadb
-	docker volume rm srcs-wordpress
+	docker volume rm srcs_wordpress
 	docker system prune -af
 
 

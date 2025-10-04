@@ -19,4 +19,4 @@ mysql -u root -p"$MYSQL_ROOT_PASSWORD" -h localhost -e "FLUSH PRIVILEGES;"
 mysqladmin -u root -p"$MYSQL_ROOT_PASSWORD" shutdown
 
 # Start MariaDB in foreground
-exec mysqld_safe
+exec mysqld
