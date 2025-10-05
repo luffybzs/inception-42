@@ -24,4 +24,3 @@ EXPOSE 443
 WORKDIR /var/www/wordpress
 
 ENTRYPOINT [ "/init.sh" ]
-# CMD ["nginx", "-g", "daemon off;"]
